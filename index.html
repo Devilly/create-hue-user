@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>Create a Philips Hue user</title>
+  </head>
+
+  <body>
+    <ul id="users"></ul>
+    <div id="feedback"></div>
+
+    <button id="request">Request new user</button>
+
+    <script>
+      const usersList = document.querySelector("#users");
+      const feedbackField = document.querySelector("#feedback");
+      const requestButton = document.querySelector("#request");
+
+      (async () => {
+        let res = await fetch('https://discovery.meethue.com');
+        let json = await res.json();
+        
+        if(json.length !== 1) return;
+
+        const ip = json[0].internalipaddress;
+
+        requestButton.addEventListener("click", async () => {
+          res = await fetch(`http://${ip}/api`, {
+            method: 'POST',
+            body: JSON.stringify({
+              devicetype: String(Date.now())
+            })
+          });
+          json = await res.json();
+
+          if(json.length !== 1) return;
+
+          if(json[0].success) {
+            const listItem = document.createElement("li");
+            listItem.innerText = json[0].success.username;
+            usersList.appendChild(listItem);
+
+            feedbackField.innerText = "";
+          } else if(json[0].error) {
+            feedbackField.innerText = json[0].error.description;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
