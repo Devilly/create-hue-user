@@ -4,12 +4,14 @@
   </head>
 
   <body>
+    <div id="ipAddress"></div>
     <ul id="users"></ul>
     <div id="feedback"></div>
 
     <button id="request" style="display: none">Request new user</button>
 
     <script>
+      const ipField = document.querySelector("#ipAddress");
       const usersList = document.querySelector("#users");
       const feedbackField = document.querySelector("#feedback");
       const requestButton = document.querySelector("#request");
@@ -20,8 +22,10 @@
         
         if(json.length !== 1) return;
 
+        const ip = json[0].internalipaddress
+
+        ipField.innerHTML = ip;
         requestButton.style.display = "block";
-        const ip = json[0].internalipaddress;
 
         requestButton.addEventListener("click", async () => {
           res = await fetch(`http://${ip}/api`, {
