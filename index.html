@@ -7,7 +7,7 @@
     <ul id="users"></ul>
     <div id="feedback"></div>
 
-    <button id="request">Request new user</button>
+    <button id="request" style="display: none">Request new user</button>
 
     <script>
       const usersList = document.querySelector("#users");
@@ -20,6 +20,7 @@
         
         if(json.length !== 1) return;
 
+        requestButton.style.display = "block";
         const ip = json[0].internalipaddress;
 
         requestButton.addEventListener("click", async () => {
